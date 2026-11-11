@@ -1,0 +1,30 @@
+[source]
+playlist_id = 38240993
+
+[apple_music]
+storefront = "us"
+transport = "web" # web 或 public
+playlist_id = "p.LV0PBD3sleV7dD4"
+
+[apple_music.public]
+# transport = "public" 时才读取；不要带 Bearer 前缀。
+developer_token = ""
+user_token = ""
+
+[apple_music.web]
+# transport = "web" 时才读取；只在本机填写。
+authorization = "Bearer ..."
+media_user_token = ""
+cookie = ''''''
+client_version = "2644.9.0-external"
+
+[runtime]
+request_delay = 1.2
+batch_size = 100
+search_limit = 5
+min_match_score = 0.58
+max_retries = 4
+timeout = 30
+state_dir = "state"
+retry_failures = false
+remote_dedupe = true

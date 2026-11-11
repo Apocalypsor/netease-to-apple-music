@@ -1,0 +1,17 @@
+[project]
+name = "apple-music-playlist-migrator"
+version = "0.3.0"
+description = "Resumable NetEase Cloud Music to Apple Music playlist migration."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "pykakasi>=2.3,<3",
+  "pypinyin>=0.54,<1",
+  "requests>=2.32,<3",
+]
+
+[project.scripts]
+apple-music-migrate = "apple_music_migrator.cli:main"
+
+[tool.uv]
+package = true
