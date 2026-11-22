@@ -16,14 +16,15 @@ user_token = ""
 authorization = "Bearer ..."
 media_user_token = ""
 cookie = ''''''
-client_version = "2644.9.0-external"
+client_version = "2646.4.0-external"
 
 [runtime]
-request_delay = 1.2
+# Apple Music 每个 HTTP 请求之间的最小间隔（秒）
+request_delay = 8.0
 batch_size = 100
-search_limit = 5
+search_limit = 21
 min_match_score = 0.58
-max_retries = 4
+max_retries = 1
 timeout = 30
 state_dir = "state"
 retry_failures = false

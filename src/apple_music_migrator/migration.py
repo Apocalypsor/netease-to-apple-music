@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
@@ -87,8 +86,6 @@ class Migrator:
             except Exception as exc:  # noqa: BLE001 - one bad song must not lose the checkpoint
                 self.store.save_match(song, None, str(exc))
                 print(f"搜索失败 [{index}/{len(pending)}]：{song.title} / {song.artist}：{exc}")
-            if self.settings.runtime.request_delay:
-                time.sleep(self.settings.runtime.request_delay)
 
     def _add_pending(
         self,
@@ -138,13 +135,9 @@ class Migrator:
                 except Exception as item_exc:  # noqa: BLE001
                     self.store.mark_failed([source_id], str(item_exc))
                     print(f"写入失败：{track.title} / {track.artist}：{item_exc}")
-                if self.settings.runtime.request_delay:
-                    time.sleep(self.settings.runtime.request_delay)
             return
         self.store.mark_added(source_ids)
         print(f"写入成功：{len(source_ids)} 首")
-        if self.settings.runtime.request_delay:
-            time.sleep(self.settings.runtime.request_delay)
 
     def _source_client(self):
         from .http import HttpClient

@@ -24,14 +24,24 @@ class RateLimitError(RemoteError):
 class HttpClient:
     _RETRYABLE_STATUS = {500, 502, 503, 504}
 
-    def __init__(self, *, timeout: float, max_retries: int, user_agent: str) -> None:
+    def __init__(
+        self,
+        *,
+        timeout: float,
+        max_retries: int,
+        user_agent: str,
+        min_interval: float = 0.0,
+    ) -> None:
         self.timeout = timeout
         self.max_retries = max_retries
+        self.min_interval = max(0.0, min_interval)
+        self._last_request_at: float | None = None
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": user_agent})
 
     def request(self, method: str, url: str, **kwargs: Any) -> requests.Response:
         for attempt in range(self.max_retries + 1):
+            self._wait_for_request_slot()
             try:
                 response = self.session.request(method, url, timeout=self.timeout, **kwargs)
             except requests.RequestException as exc:
@@ -59,6 +69,16 @@ class HttpClient:
             _sleep_backoff(attempt)
 
         raise AssertionError("unreachable")
+
+    def _wait_for_request_slot(self) -> None:
+        if self.min_interval <= 0:
+            return
+        now = time.monotonic()
+        if self._last_request_at is not None:
+            wait = self.min_interval - (now - self._last_request_at)
+            if wait > 0:
+                time.sleep(wait)
+        self._last_request_at = time.monotonic()
 
     def get_json(self, url: str, **kwargs: Any) -> dict[str, Any]:
         response = self.request("GET", url, **kwargs)

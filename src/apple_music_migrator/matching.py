@@ -35,6 +35,8 @@ def variants(value: str) -> frozenset[str]:
 def _best_similarity(source: str, target: str) -> float:
     source_forms = variants(source)
     target_forms = variants(target)
+    if not source_forms or not target_forms:
+        return 0.0
     return max(
         SequenceMatcher(None, source_form, target_form).ratio()
         for source_form in source_forms

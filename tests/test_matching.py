@@ -13,6 +13,9 @@ class MatchingTests(unittest.TestCase):
     def test_rejects_unrelated_candidate(self) -> None:
         self.assertLess(score("Wanna Stay", "KKI", "Sweet Sorrow", "K!-Ki"), 0.58)
 
+    def test_empty_artist_does_not_raise(self) -> None:
+        self.assertGreater(score("朝凪", "あたらよ", "Asanagi", ""), 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()
